@@ -184,6 +184,22 @@ describe PostcodeAnywhere::CapturePlus::Interactive do
       }
       @search_result = PostcodeAnywhere::CapturePlus::SearchResult.new(id: '888')
     end
+    describe '#retrieve_by_id' do
+      before do
+        stub_get(@endpoint).with(query: @retrieve_params).to_return(
+          body: fixture('capture_plus_retrieve.json')
+        )
+      end
+      it 'requests the correct resource' do
+        item = @client.retrieve_by_id('888')
+        expect(item).to be_a PostcodeAnywhere::CapturePlus::RetrieveResult
+        expect(item.id).to eq('GBR|PR|11507281|0|0|0')
+        expect(item.domestic_id).to eq '11507281'
+        expect(item.language).to eq 'ENG'
+        expect(item.language_alternatives).to eq 'ENG'
+        expect(item.department).to eq 'dpmnt'
+      end
+    end
     describe '#retrieve' do
       before do
         stub_get(@endpoint).with(query: @retrieve_params).to_return(

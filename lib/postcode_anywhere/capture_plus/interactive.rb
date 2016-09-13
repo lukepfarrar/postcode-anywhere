@@ -51,16 +51,12 @@ module PostcodeAnywhere
       end
 
       def retrieve(search_result)
-        options = {}
-        options.merge!(
-          'Id' => ParentIdExtractor.new(search_result).extract
-        )
-        perform_with_object(
-          :get,
-          RETRIEVE_ADDRESS_ENDPOINT,
-          options,
-          PostcodeAnywhere::CapturePlus::RetrieveResult
-        )
+        retrieve_by_id(ParentIdExtractor.new(search_result).extract)
+      end
+
+      def retrieve_by_id(id)
+        options = { 'Id': id }
+        perform_with_object(:get, RETRIEVE_ADDRESS_ENDPOINT, options, PostcodeAnywhere::CapturePlus::RetrieveResult)
       end
 
       class ParentIdExtractor
